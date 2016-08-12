@@ -44,7 +44,8 @@ app.controller('MainCtrl',['$scope','posts', function($scope, posts){
         var newPost = { 
             title : $scope.title,
             link: $scope.link,
-            upvotes : 0 
+            upvotes : 0,
+            comments: [] 
         };
 
         $scope.posts.push (newPost);
@@ -54,6 +55,31 @@ app.controller('MainCtrl',['$scope','posts', function($scope, posts){
 
     $scope.incrementUpvotes = function (post) {
         post.upvotes += 1;
+    };
+
+}]);
+
+app.controller('PostsCtrl', ['$scope', '$stateParams', 'posts', function ($scope, $stateParams, posts) {
+
+   $scope.post = posts.posts[$stateParams.id];
+
+   $scope.addComment = function () {
+       if ($scope.body === '') {
+           return;
+       }
+       var newComment = {
+           body : $scope.body,
+           author : $scope.author,
+           upvotes :0
+       };
+
+       $scope.post.comments.push(newComment);
+       $scope.body = '';
+       $scope.author = '';
+   };
+
+   $scope.incrementUpvotes = function (comment) {
+        comment.upvotes += 1;
     };
 
 }]);
