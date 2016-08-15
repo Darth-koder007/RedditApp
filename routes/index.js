@@ -9,6 +9,34 @@ router.get('/', function(req, res, next) {
   res.render('index', { title: 'Express' });
 });
 
+
+/*Query posts Route */
+router.param('post', function(req, res, next, id) {
+  var query = Post.findById(id);
+
+  query.exec(function (err, post) {
+    if (err) { return next(err); }
+    if (typeof post == 'undefined' || post == null) { return next(new Error('can\'t find post')); }
+
+    req.post = post;
+    return next();
+  });
+});
+
+
+/*Query comments Route */
+router.param('comment', function(req, res, next, id) {
+  var query = Comment.findById(id);
+
+  query.exec(function (err, comment) {
+    if (err) { return next(err); }
+    if (typeof comment == 'undefined' || comment == null) { return next(new Error('can\'t find comment')); }
+
+    req.comment = comment;
+    return next();
+  });
+});
+
 /*Get Posts Route */
 router.get('/posts', function (req, res, next) {
   Post.find(function (err, posts) {
@@ -30,22 +58,15 @@ router.post('/posts', function (req, res, next) {
   });
 });
 
-/*Query posts Route */
-router.param('post', function(req, res, next, id) {
-  var query = Post.findById(id);
-
-  query.exec(function (err, post) {
-    if (err) { return next(err); }
-    if (!post) { return next(new Error('can\'t find post')); }
-
-    req.post = post;
-    return next();
-  });
-});
-
 /*Return single post */
 router.get('/posts/:post', function(req, res) {
-  res.json(req.post);
+  req.post.populate('comments', function(err, post) {
+    if (err) {
+       return;
+       }
+
+    res.json(req.post);
+  });
 });
 
 /*upvote post route */
@@ -53,6 +74,36 @@ router.put('/posts/:post/upvote', function(req, res, next){
   req.post.upvote(function (err, post) {
     if (err) {return next(err);}
     res.json(post);
+  });
+});
+
+/*Save comment */
+router.post('/posts/:post/comments', function(req, res, next) {
+  var comment = new Comment(req.body);
+  comment.post = req.post;
+
+  comment.save(function (err, comment) {
+    if (err) { 
+      return next(err);
+     }
+    
+    req.post.comments.push(comment);
+    req.post.save(function(err, post){
+      if (err) {
+        return next(err);
+      }
+      res.json(comment);
+    });
+  });
+});
+
+/*Upvote comment*/
+router.put('/posts/:post/comments/:comment/upvote', function(req, res, next){
+  req.comment.upvote(function(err, comment){
+    if(err) { 
+      return next(err);
+    }
+    res.json(comment);
   });
 });
 
