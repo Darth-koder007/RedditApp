@@ -4,7 +4,12 @@ app.config(['$stateProvider', '$urlRouterProvider', function ($stateProvider, $u
         $stateProvider.state ('home', {
             url: '/home',
             templateUrl: '/home.html',
-            controller: 'MainCtrl'
+            controller: 'MainCtrl',
+            resolve: {
+                postPromise: ['posts', function(posts) {
+                    return posts.getAll();
+                }]
+            }
         })
         .state('posts',{
             url:'/posts/{id}',
@@ -15,10 +20,16 @@ app.config(['$stateProvider', '$urlRouterProvider', function ($stateProvider, $u
         $urlRouterProvider.otherwise('home');
 }]);
 
-app.factory('posts', [function(){
+app.factory('posts', ['$http', function($http){
     
     var o = {
         posts : []
+    };
+
+    o.getAll = function() {
+        return $http.get('/posts').success(function(data){
+            angular.copy(data,o.posts);
+        });
     };
 
     return o;
@@ -27,13 +38,6 @@ app.factory('posts', [function(){
 app.controller('MainCtrl',['$scope','posts', function($scope, posts){
 
     $scope.posts = posts.posts;
-    // $scope.posts = [
-    //     { title: 'post 1', upvotes: 5 },
-    //     { title: 'post 2', upvotes: 4 },
-    //     { title: 'post 3', upvotes: 1 },
-    //     { title: 'post 4', upvotes: 3 },
-    //     { title: 'post 5', upvotes: 2 }
-    // ];
 
     $scope.addPost = function () {
         
