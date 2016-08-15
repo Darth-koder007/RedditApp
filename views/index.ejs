@@ -30,7 +30,7 @@
                                 {{post.title}}
                             </span>
                             <span>
-                                <a href="#/posts/{{$index}}">Comments</a>
+                                <a href="#/posts/{{post._id}}">Comments</a>
                             </span>
                         </span>
                     </div>
@@ -53,7 +53,7 @@
                     <a ng-show="post.link" href="{{post.link}}">
                         {{post.title}}
                     </a>
-                    <span ng-hide="post.linl">
+                    <span ng-hide="post.link">
                         {{post.title}}
                     </span>
                 </h3>
