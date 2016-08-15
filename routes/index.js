@@ -52,8 +52,9 @@ router.get('/posts', function (req, res, next) {
 });
 
 /*Post Posts Route */
-router.post('/posts', function (req, res, next) {
+router.post('/posts', auth, function (req, res, next) {
   var post = new Post(req.body);
+  post.author = req.payload.username;
   post.save(function (err, post) {
     if(err){ 
       return next(err);
@@ -74,7 +75,7 @@ router.get('/posts/:post', function(req, res) {
 });
 
 /*upvote post route */
-router.put('/posts/:post/upvote', function(req, res, next){
+router.put('/posts/:post/upvote', auth,function(req, res, next){
   req.post.upvote(function (err, post) {
     if (err) {return next(err);}
     res.json(post);
@@ -82,8 +83,9 @@ router.put('/posts/:post/upvote', function(req, res, next){
 });
 
 /*Save comment */
-router.post('/posts/:post/comments', function(req, res, next) {
+router.post('/posts/:post/comments', auth, function(req, res, next) {
   var comment = new Comment(req.body);
+  post.author = req.payload.username;
   comment.post = req.post;
 
   comment.save(function (err, comment) {
@@ -102,7 +104,7 @@ router.post('/posts/:post/comments', function(req, res, next) {
 });
 
 /*Upvote comment*/
-router.put('/posts/:post/comments/:comment/upvote', function(req, res, next){
+router.put('/posts/:post/comments/:comment/upvote', auth, function(req, res, next){
   req.comment.upvote(function(err, comment){
     if(err) { 
       return next(err);
