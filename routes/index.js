@@ -114,7 +114,7 @@ router.put('/posts/:post/comments/:comment/upvote', auth, function(req, res, nex
 });
 
 /*Register New Users route */
-router.post('/register', function(req, res, next){
+router.post('/register', auth, function(req, res, next){
   if(!req.body.username || !req.body.password){
     return res.status(400).json({message : 'Please fill out all fields'});
   }
@@ -131,7 +131,7 @@ router.post('/register', function(req, res, next){
 });
 
 /*User Login route */
-router.post('/login', function(req, res, next){
+router.post('/login', auth, function(req, res, next){
   if (!req.body.username || !req.body.password) {
     return res.status(400).json({message : 'Please fill out all fields'});
   }
