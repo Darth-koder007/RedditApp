@@ -11,7 +11,7 @@ var mongoose = require('mongoose');
 require('./models/Posts');
 require('./models/Comments');
 require('./models/Users');
-
+mongoose.Promise = global.Promise;
 mongoose.connect('mongodb://localhost/news');
 
 require('./config/passport');

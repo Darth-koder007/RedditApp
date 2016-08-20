@@ -6,7 +6,7 @@ var Comment = mongoose.model('Comment');
 var User = mongoose.model('User');
 var passport = require('passport');
 var jwt = require('express-jwt');
-var auth = jwt({secret : 'SECRET', userPropert : 'payload'});
+var auth = jwt({secret : 'SECRET', userProperty : 'payload'});
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
@@ -114,7 +114,7 @@ router.put('/posts/:post/comments/:comment/upvote', auth, function(req, res, nex
 });
 
 /*Register New Users route */
-router.post('/register', auth, function(req, res, next){
+router.post('/register', function(req, res, next){
   if(!req.body.username || !req.body.password){
     return res.status(400).json({message : 'Please fill out all fields'});
   }
