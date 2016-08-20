@@ -60,7 +60,7 @@ app.factory('auth', ['$http', '$window', function ($http, $window){
         var token = auth.getToken();
        
         if (token) {
-
+            
             var payload = JSON.parse($window.atob(token.split('.')[1]));
 
             return payload.exp > Date.now() / 1000;
@@ -234,6 +234,7 @@ app.controller('AuthCtrl', ['$scope','$state','auth', function ($scope, $state, 
 }]);
 
 app.controller('NavCtrl', ['$scope', 'auth', function($scope, auth){
+    console.log(auth.currentUser());
     $scope.isLoggedIn = auth.isLoggedIn;
     $scope.currentUser = auth.currentUser;
     $scope.logOut = auth.logOut;
