@@ -53,14 +53,15 @@ app.factory('auth', ['$http', '$window', function ($http, $window){
     };
 
     auth.getToken = function () {
-        return $window.localStorage['flapper-news-toke'];
+        return $window.localStorage['flapper-news-token'];
     };
 
     auth.isLoggedIn = function () {
         var token = auth.getToken();
-
+       
         if (token) {
-            var payload = JSON.parse($window.atob.split('.')[1]);
+
+            var payload = JSON.parse($window.atob(token.split('.')[1]));
 
             return payload.exp > Date.now() / 1000;
         }
@@ -138,15 +139,15 @@ app.factory('posts', ['$http','auth', function($http, auth){
 
     //add comment to the respective post
     o.addComment = function (id, comment) {
-        return $http.post('/posts/' + id + '/comments',comment,
-            { headers:{Authorization:'Bearer '+auth.getToken()}
+        return $http.post('/posts/' + id + '/comments',comment,{
+             headers:{Authorization:'Bearer '+auth.getToken()}
         });
     };
 
     //Upvote a comment 
     o.upvoteComment = function (post, comment) {
         return $http.put('/posts/' + post._id + '/comments/' + comment._id + '/upvote', null, {
-            headers: {Authorization: 'Bearer '+getToken()}
+            headers: {Authorization: 'Bearer '+auth.getToken()}
         }).success(function(data){
                    comment.upvotes += 1;
         });
@@ -223,7 +224,7 @@ app.controller('AuthCtrl', ['$scope','$state','auth', function ($scope, $state, 
         });
     };
 
-    $scope.login = function () {
+    $scope.logIn = function () {
         auth.login($scope.user).error(function(error){
             $scope.error = error;
         }).then(function(){
