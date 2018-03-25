@@ -1,9 +1,9 @@
 # RedditApp
 thinkster tutorial for creating [Reddit/Hacker news clone ](https://thinkster.io/mean-stack-tutorial#introduction)
 
-##Project Specifications
+## Project Specifications
 
-###Before beginning work on any project, it's usually a good idea to know what you're building. Below is a basic list of things we want our users to be able to do:
+### Before beginning work on any project, it's usually a good idea to know what you're building. Below is a basic list of things we want our users to be able to do:
 
 * Create new posts
 * View all posts ordered by upvotes
